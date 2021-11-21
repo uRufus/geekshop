@@ -1,0 +1,15 @@
+[
+  {
+    "img": "vendor/img/slides/slide-1.jpg",
+    "alt": "First slide",
+    "active": "active"
+  },
+  {
+    "img": "vendor/img/slides/slide-2.jpg",
+    "alt": "Second slide"
+  },
+  {
+    "img": "vendor/img/slides/slide-3.jpg",
+    "alt": "Third slide"
+  }
+]
