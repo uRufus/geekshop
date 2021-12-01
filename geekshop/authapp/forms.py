@@ -7,13 +7,9 @@ from authapp.validators import validate_username
 class UserLoginForm(AuthenticationForm):
 
     username = forms.CharField(
-        widget=forms.TextInput(), validators=[validate_username()]
+        widget=forms.TextInput(), validators=[validate_username]
     )
 
-    # password = forms.CharField(
-    #     label=_("New password"),
-    #     widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
-    # )
     class Meta:
         model = User
         fields = ('username', 'password')
@@ -54,7 +50,7 @@ class UserProfileForm(UserChangeForm):
         fields = ('username', 'email', 'first_name', 'last_name', 'image', 'age')
 
     def __init__(self, *args, **kwargs):
-        super(UserChangeForm, self).__init__(*args, **kwargs)
+        super(UserProfileForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['readonly'] = True
         self.fields['email'].widget.attrs['readonly'] = True
 
