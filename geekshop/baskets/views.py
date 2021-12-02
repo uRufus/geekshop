@@ -8,7 +8,7 @@ from mainapp.models import Product
 
 
 @login_required
-def basket_add(request,id):
+def basket_add(request, id):
     user_select = request.user
     product = Product.objects.get(id=id)
     baskets = Basket.objects.filter(user=user_select, product=product)
@@ -18,7 +18,7 @@ def basket_add(request,id):
         basket.save()
     else:
         Basket.objects.create(user=user_select, product=product, quantity=1)
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
