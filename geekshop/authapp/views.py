@@ -20,6 +20,8 @@ def login(request):
             if user.is_active:
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse('index'))
+        else:
+            messages.error(request, form.errors)
     else:
         form = UserLoginForm()
 
@@ -56,12 +58,7 @@ def profile(request):
             messages.success(request, 'Вы успешно обновили профиль')
         else:
             form = UserProfileForm()
-    # total_quantity = 0
-    # total_sum = 0
-    # baskets = Basket.objects.filter(user=request.user)
-    # for basket in baskets:
-    #     total_quantity += basket.quantity
-    #     total_sum = basket.sum()
+
     context = {
         'title': 'geekshop - профайл',
         'form': UserProfileForm(instance=request.user),
