@@ -1,72 +1,58 @@
 from django.contrib import auth, messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, UpdateView, FormView
+from django.contrib.auth.views import LoginView, LogoutView
 
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from authapp.models import User
 from baskets.models import Basket
+from django.shortcuts import render, get_object_or_404
 
 
-def login(request):
-    if request.method == 'POST':
-        form = UserLoginForm(data=request.POST)
-        if form.is_valid():
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = auth.authenticate(username=username, password=password)
-            if user.is_active:
-                auth.login(request, user)
-                return HttpResponseRedirect(reverse('index'))
-        else:
-            messages.error(request, form.errors)
-    else:
-        form = UserLoginForm()
+class UserLoginView(LoginView):
+    template_name = 'authapp/login.html'
+    form_class = UserLoginForm
 
-    context = {
-        'title': 'geekshop - авторизация',
-        'form': form
-        }
-    return render(request, 'authapp/login.html', context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserLoginView, self).get_context_data(**kwargs)
+        context['title'] = 'geekshop - авторизация'
+        return context
 
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegisterForm(data=request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Вы успешно зарегистрировались')
-            return HttpResponseRedirect(reverse('authapp:login'))
-    else:
-        form = UserRegisterForm()
+class UserRegisterView(CreateView):
+    model = User
+    template_name = 'authapp/register.html'
+    form_class = UserRegisterForm
+    success_url = reverse_lazy('authapp:login')
 
-    context = {
-        'title': 'geekshop - регистрация',
-        'form': form
-    }
-    return render(request, 'authapp/register.html', context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserRegisterView, self).get_context_data(**kwargs)
+        context['title'] = 'geekshop - регистрация'
+        return context
 
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Вы успешно обновили профиль')
-        else:
-            form = UserProfileForm()
+class UserProfileView(UpdateView):
+    model = User
+    template_name = 'authapp/profile.html'
+    form_class = UserProfileForm
+    success_url = reverse_lazy('authapp/profile.html')
 
-    context = {
-        'title': 'geekshop - профайл',
-        'form': UserProfileForm(instance=request.user),
-        'baskets': Basket.objects.filter(user=request.user)
-    }
-    return render(request, 'authapp/profile.html', context)
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(User, pk=self.request.user.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super(UserProfileView, self).get_context_data(**kwargs)
+        context['title'] = 'geekshop - профайл'
+        context['baskets'] = Basket.objects.filter(user=self.request.user)
+        return context
 
 
-def logout(request):
-    auth.logout(request)
-    return render(request, 'mainapp/index.html')
+class UserLogoutView(LogoutView):
+    template_name = 'mainapp/index.html'
+
