@@ -14,30 +14,24 @@ from authapp.models import User
 from baskets.models import Basket
 from django.shortcuts import render, get_object_or_404
 
+from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin, CustomDispatchMixin
 
-class UserLoginView(LoginView):
+
+class UserLoginView(LoginView, BaseClassContextMixin):
     template_name = 'authapp/login.html'
     form_class = UserLoginForm
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(UserLoginView, self).get_context_data(**kwargs)
-        context['title'] = 'geekshop - авторизация'
-        return context
+    title = 'geekshop - авторизация'
 
 
-class UserRegisterView(CreateView):
+class UserRegisterView(CreateView, BaseClassContextMixin):
     model = User
     template_name = 'authapp/register.html'
     form_class = UserRegisterForm
     success_url = reverse_lazy('authapp:login')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(UserRegisterView, self).get_context_data(**kwargs)
-        context['title'] = 'geekshop - регистрация'
-        return context
+    title = 'geekshop - регистрация'
 
 
-class UserProfileView(UpdateView):
+class UserProfileView(UpdateView, CustomDispatchMixin):
     model = User
     template_name = 'authapp/profile.html'
     form_class = UserProfileForm
