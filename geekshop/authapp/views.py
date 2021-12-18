@@ -5,7 +5,6 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
 
@@ -14,7 +13,7 @@ from authapp.models import User
 from baskets.models import Basket
 from django.shortcuts import render, get_object_or_404
 
-from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin, CustomDispatchMixin
+from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin
 
 
 class UserLoginView(LoginView, BaseClassContextMixin):
