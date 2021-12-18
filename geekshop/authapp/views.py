@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
 
 from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
@@ -13,7 +13,7 @@ from authapp.models import User
 from baskets.models import Basket
 from django.shortcuts import render, get_object_or_404
 
-from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin
+from mainapp.mixin import BaseClassContextMixin, UserDispatchMixin
 
 
 class UserLoginView(LoginView, BaseClassContextMixin):
@@ -30,18 +30,17 @@ class UserRegisterView(CreateView, BaseClassContextMixin):
     title = 'geekshop - регистрация'
 
 
-class UserProfileView(UpdateView, CustomDispatchMixin):
-    model = User
+class UserProfileView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
     template_name = 'authapp/profile.html'
     form_class = UserProfileForm
-    success_url = reverse_lazy('authapp/profile.html')
+    success_url = reverse_lazy('authapp:profile')
+    title = 'geekshop - профайл'
 
     def get_object(self, *args, **kwargs):
         return get_object_or_404(User, pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
-        context['title'] = 'geekshop - профайл'
         context['baskets'] = Basket.objects.filter(user=self.request.user)
         return context
 

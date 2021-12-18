@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView
+from django.views.generic import ListView, UpdateView, DeleteView, CreateView, TemplateView
 
 from admins.forms import UserAdminRegisterForm, UserAdminProfileForm, ProductCategoryRegisterForm, ProductRegisterForm
 from authapp.models import User
@@ -12,9 +12,8 @@ from mainapp.mixin import BaseClassContextMixin, CustomDispatchMixin
 from mainapp.models import ProductCategory, Product
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def index(request):
-    return render(request, 'admins/admin.html')
+class IndexTemplateView(TemplateView, CustomDispatchMixin):
+    template_name = 'admins/admin.html'
 
 
 # Users
