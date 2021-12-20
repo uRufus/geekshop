@@ -49,6 +49,7 @@ class ProductCategoryRegisterForm(forms.ModelForm):
 
 class ProductRegisterForm(forms.ModelForm):
 
+    category = forms.ModelChoiceField(queryset=ProductCategory.objects.all())
     image = forms.ImageField(widget=forms.FileInput(), required=False)
 
     class Meta:
@@ -59,5 +60,8 @@ class ProductRegisterForm(forms.ModelForm):
         super(ProductRegisterForm, self).__init__(*args, **kwargs)
 
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control py-4'
+            if field_name == 'category':
+                field.widget.attrs['class'] = 'form-control'
+            else:
+                field.widget.attrs['class'] = 'form-control py-4'
         self.fields['image'].widget.attrs['class'] = 'custom-file-input'
