@@ -120,7 +120,7 @@ def order_forming_complete(request, pk):
     return HttpResponseRedirect(reverse('orders:list'))
 
 
-def get_product_price(request,pk):
+def get_product_price(request, pk):
     if request.is_ajax():
         product = Product.objects.get(pk=pk)
         if product:
