@@ -4,14 +4,14 @@ import random
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django import forms
 from authapp.models import User, UserProfile
-from authapp.validators import validate_username
+# from authapp.validators import validate_username
 
 
 class UserLoginForm(AuthenticationForm):
 
-    username = forms.CharField(
-        widget=forms.TextInput(), validators=[validate_username]
-    )
+    # username = forms.CharField(
+    #     widget=forms.TextInput(), validators=[validate_username]
+    # )
 
     class Meta:
         model = User
