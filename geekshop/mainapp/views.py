@@ -21,9 +21,9 @@ def products(request, id_category=None, page=1):
         'title': 'geekshop - каталог',
     }
     if id_category:
-        product = Product.objects.filter(category_id=id_category)
+        product = Product.objects.filter(category_id=id_category).select_related('category')
     else:
-        product = Product.objects.all()
+        product = Product.objects.all().select_related('category')
 
     paginator = Paginator(product, per_page=3)
 
