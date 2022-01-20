@@ -96,6 +96,7 @@ class ProductDetail(DetailView):
     def get_context_data(self, **kwargs):
         """ Добавляем список категорий для вывода сайдбара с категориями на странице каталога"""
         context = super(ProductDetail, self).get_context_data(**kwargs)
-        product = self.get_object()
-        context['product'] = product
+        # product = self.get_object()
+        # context['product'] = product
+        context['product'] = get_product(self.kwargs.get("pk"))
         return context
