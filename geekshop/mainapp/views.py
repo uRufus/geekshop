@@ -4,7 +4,7 @@ from json import load
 
 from django.conf import settings
 from django.core.cache import cache
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 
 from django.views.generic import DetailView
 
@@ -55,7 +55,9 @@ def get_product(pk):
     else:
         return Product.objects.get(id=pk)
 
-@cache_page(3600)
+
+# @cache_page(3600)
+@never_cache
 def products(request, id_category=None, page=1):
     context = {
         'title': 'geekshop - каталог',
