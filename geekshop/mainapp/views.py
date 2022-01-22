@@ -25,6 +25,7 @@ def get_link_category():
         return ProductCategory.objects.all()
 
 
+
 def get_link_product():
     if settings.LOW_CACHE:
         key = 'link_product'
